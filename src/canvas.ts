@@ -54,23 +54,29 @@ type ReactionTrigger =
   | { type: "MOUSE_DOWN" | "MOUSE_UP"; delay: number }
   | { type: "MOUSE_ENTER" | "MOUSE_LEAVE" }
   | {
-    type: "ON_KEY_DOWN";
-    device: "KEYBOARD" | "XBOX_ONE" | "PS4" | "SWITCH_PRO" | "UNKNOWN_CONTROLLER";
-    keyCodes: number[];
-  };
+      type: "ON_KEY_DOWN";
+      device: "KEYBOARD" | "XBOX_ONE" | "PS4" | "SWITCH_PRO" | "UNKNOWN_CONTROLLER";
+      keyCodes: number[];
+    };
 
-type Curve = {
-  type: 'spring';
-  stiffness: number;
-  damping: number;
-  mass: number;
-  initialVelocity: number; // Make this required
-} | {
-  type: 'bezier';
-  values: [number, number, number, number];
-};
+type Curve =
+  | {
+      type: "spring";
+      stiffness: number;
+      damping: number;
+      mass: number;
+      initialVelocity: number; // Make this required
+    }
+  | {
+      type: "bezier";
+      values: [number, number, number, number];
+    };
 
-function createReaction(triggerType: string, curve: Curve, duration: number): { trigger: ReactionTrigger; actions: ReadonlyArray<Action> } {
+function createReaction(
+  triggerType: string,
+  curve: Curve,
+  duration: number,
+): { trigger: ReactionTrigger; actions: ReadonlyArray<Action> } {
   console.log("Creating reaction:", { triggerType, curve, duration });
 
   if (!endFrame) {
@@ -79,7 +85,7 @@ function createReaction(triggerType: string, curve: Curve, duration: number): { 
 
   let easing: Easing;
 
-  if (curve.type === 'spring') {
+  if (curve.type === "spring") {
     easing = {
       type: "CUSTOM_SPRING",
       // @ts-ignore: Figma API doesn't accept initialVelocity, but it works without it
@@ -88,7 +94,7 @@ function createReaction(triggerType: string, curve: Curve, duration: number): { 
         stiffness: curve.stiffness,
         damping: curve.damping,
         // initialVelocity: 0.0
-      }
+      },
     };
   } else {
     easing = {
@@ -97,8 +103,8 @@ function createReaction(triggerType: string, curve: Curve, duration: number): { 
         x1: curve.values[0],
         y1: curve.values[1],
         x2: curve.values[2],
-        y2: curve.values[3]
-      }
+        y2: curve.values[3],
+      },
     };
   }
 
