@@ -1,5 +1,4 @@
 @import url('figma-kit/styles.css');
-
-body {
-    padding: 0;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
